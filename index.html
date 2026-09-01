@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Flashcards for 55 literary elements — English 11 review.">
+<title>Literary Elements Flashcards</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --ink: #22262E;
+    --muted: #6B7079;
+    --line: #E3E2DA;
+    --blue: #2F49B8;
+    --blue-ink: #FFFFFF;
+    --hl: #FFE14D;
+    --hl-ink: #22262E;
+    --chip-bg: #F1F0EA;
+    --shadow: 0 1px 2px rgba(34,38,46,.06), 0 8px 24px rgba(34,38,46,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16181D;
+      --card: #21242C;
+      --ink: #E9E8E2;
+      --muted: #9BA0A8;
+      --line: #343841;
+      --blue: #8FA0FF;
+      --blue-ink: #14161B;
+      --hl: #D9BC3B;
+      --hl-ink: #1E2024;
+      --chip-bg: #2A2E37;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16181D;
+    --card: #21242C;
+    --ink: #E9E8E2;
+    --muted: #9BA0A8;
+    --line: #343841;
+    --blue: #8FA0FF;
+    --blue-ink: #14161B;
+    --hl: #D9BC3B;
+    --hl-ink: #1E2024;
+    --chip-bg: #2A2E37;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, Segoe UI, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+  }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 20px 64px; }
+
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 0;
+    letter-spacing: .01em;
+    text-wrap: balance;
+  }
+  .sub { color: var(--muted); font-size: .85rem; margin: 2px 0 0; }
+  .count {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-size: .9rem;
+    white-space: nowrap;
+  }
+  .count b { color: var(--ink); font-weight: 600; }
+
+  .progress { height: 3px; background: var(--line); border-radius: 2px; margin: 14px 0 22px; overflow: hidden; }
+  .progress i { display: block; height: 100%; background: var(--blue); border-radius: 2px; transition: width .25s ease; }
+
+  /* ---- card ---- */
+  .stage { perspective: 1400px; }
+  .card {
+    display: block; width: 100%; height: min(58vh, 400px);
+    position: relative; border: 0; padding: 0; background: none;
+    cursor: pointer; font: inherit; color: inherit; text-align: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card-inner {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    transition: transform .45s cubic-bezier(.4,.1,.2,1);
+  }
+  .card.flipped .card-inner { transform: rotateY(180deg); }
+  .card.no-anim .card-inner { transition: none; }
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 28px 30px;
+    display: flex; flex-direction: column;
+    overflow: auto;
+  }
+  .face.back { transform: rotateY(180deg); }
+
+  .face-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .cat-tag {
+    font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+  }
+  .star-flag { font-size: .78rem; color: var(--muted); }
+  .star-flag.on { color: var(--hl-ink); background: var(--hl); border-radius: 999px; padding: 3px 10px; font-weight: 500; }
+
+  .face-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .term-face { align-items: center; text-align: center; }
+  .term {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .term em {
+    font-style: normal;
+    background: var(--hl); color: var(--hl-ink);
+    padding: .04em .18em;
+    border-radius: .22em .5em .28em .45em / .5em .3em .55em .3em;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+
+  .def-face { text-align: left; }
+  .mini-term {
+    font-family: "Fraunces", Georgia, serif; font-weight: 600;
+    font-size: 1.05rem; color: var(--muted); margin-bottom: 10px;
+  }
+  .def-en {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: clamp(1.05rem, 2.7vw, 1.22rem);
+    line-height: 1.6; margin: 0; max-width: 36em;
+  }
+  .ex { margin: 16px 0 0; font-size: .92rem; line-height: 1.55; color: var(--muted); max-width: 36em; }
+  .ex b {
+    font-weight: 500; font-size: .7rem; letter-spacing: .1em;
+    background: var(--chip-bg); color: var(--muted);
+    border-radius: 4px; padding: 2px 6px; margin-right: 7px; vertical-align: 1px;
+  }
+  .flip-hint { text-align: center; color: var(--muted); font-size: .78rem; margin-top: 4px; }
+
+  /* ---- controls ---- */
+  .controls { display: flex; gap: 10px; margin-top: 18px; }
+  button.ctl {
+    font: inherit; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 10px; padding: 10px 14px; font-size: .92rem;
+    flex: 1;
+  }
+  button.ctl.primary { background: var(--blue); color: var(--blue-ink); border-color: var(--blue); font-weight: 500; flex: 1.4; }
+  button.ctl:hover { border-color: var(--blue); }
+  button.ctl.primary:hover { filter: brightness(1.06); }
+
+  .controls2 { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; align-items: stretch; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg button {
+    font: inherit; font-size: .85rem; cursor: pointer;
+    background: var(--card); color: var(--muted); border: 0; padding: 9px 13px;
+  }
+  .seg button.on { background: var(--blue); color: var(--blue-ink); font-weight: 500; }
+  button.ghost {
+    font: inherit; font-size: .85rem; cursor: pointer;
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px;
+  }
+  button.ghost:hover { border-color: var(--blue); }
+  button.ghost.starred { background: var(--hl); color: var(--hl-ink); border-color: var(--hl); font-weight: 500; }
+  .spacer { flex: 1; }
+
+  /* ---- filter chips ---- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .chip {
+    font: inherit; font-size: .82rem; cursor: pointer;
+    background: var(--chip-bg); color: var(--ink);
+    border: 1px solid transparent; border-radius: 999px; padding: 6px 12px;
+  }
+  .chip small { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chip.on { background: var(--blue); color: var(--blue-ink); }
+  .chip.on small { color: var(--blue-ink); opacity: .75; }
+
+  .kbd-hint { margin-top: 18px; color: var(--muted); font-size: .78rem; text-align: center; }
+  kbd {
+    font-family: inherit; font-size: .72rem;
+    border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px;
+    padding: 1px 6px; background: var(--card);
+  }
+
+  /* ---- cheat sheet ---- */
+  details.sheet { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 18px; }
+  details.sheet summary {
+    cursor: pointer; font-weight: 500; font-size: .95rem;
+    color: var(--ink); list-style-position: inside;
+  }
+  .sheet-group h3 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 600;
+    font-size: 1.02rem; margin: 26px 0 4px;
+  }
+  .sheet-row {
+    display: grid; grid-template-columns: 14em 1fr; gap: 4px 16px;
+    padding: 9px 0; border-bottom: 1px solid var(--line);
+    font-size: .88rem; line-height: 1.5;
+  }
+  .sheet-row .t { font-weight: 600; }
+  .sheet-row .d { color: var(--muted); font-family: "Source Serif 4", Georgia, serif; }
+  @media (max-width: 560px) {
+    .sheet-row { grid-template-columns: 1fr; }
+    .face { padding: 22px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-inner { transition: none; }
+    .progress i { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Literary Elements Flashcards</h1>
+      <p class="sub">English 11 · 55 terms to review</p>
+    </div>
+    <div class="count" id="count"></div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+
+  <div class="stage">
+    <button class="card" id="card" aria-label="Flip the card">
+      <div class="card-inner" id="cardInner">
+        <div class="face front" id="faceFront"></div>
+        <div class="face back" id="faceBack"></div>
+      </div>
+    </button>
+  </div>
+  <p class="flip-hint">Click the card or press Space to flip</p>
+
+  <div class="controls">
+    <button class="ctl" id="btnPrev">← Prev</button>
+    <button class="ctl primary" id="btnFlip">Flip</button>
+    <button class="ctl" id="btnNext">Next →</button>
+  </div>
+  <div class="controls2">
+    <div class="seg" role="group" aria-label="Card direction">
+      <button id="dirTerm" class="on">Term → Def</button>
+      <button id="dirDef">Def → Term</button>
+    </div>
+    <button class="ghost" id="btnShuffle">🔀 Shuffle</button>
+    <div class="spacer"></div>
+    <button class="ghost" id="btnStar">☆ Mark as tricky</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <p class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> switch · <kbd>Space</kbd> flip · <kbd>M</kbd> mark</p>
+
+  <details class="sheet">
+    <summary>Quick reference — all 55 terms</summary>
+    <div id="sheet"></div>
+  </details>
+</div>
+
+<script>
+const CATS = {
+  plot:  "Plot",
+  char:  "Character",
+  pov:   "Point of View",
+  irony: "Irony",
+  fig:   "Figurative Language",
+  lang:  "Language & Style",
+};
+
+const CARDS = [
+  { en:"Plot", cat:"plot",
+    def:"A chain of related events that makes up a story.",
+    ex:"Exposition → rising action → climax → falling action → resolution." },
+  { en:"Exposition", cat:"plot",
+    def:"The beginning of a story, where the author introduces the basic situation: the setting, characters, necessary background information, and the conflict." },
+  { en:"Conflict", cat:"plot",
+    def:"The problem in the story. It is usually a problem the protagonist faces." },
+  { en:"Internal Conflict", cat:"plot",
+    def:"The character has a struggle within him or herself.",
+    ex:"Character vs. self — torn over whether to tell the truth." },
+  { en:"External Conflict", cat:"plot",
+    def:"The character struggles with another person, nature, or some other outside force.",
+    ex:"Character vs. character, vs. nature, vs. society." },
+  { en:"Protagonist", cat:"char",
+    def:"The main character in a story.",
+    ex:"Harry Potter." },
+  { en:"Antagonist", cat:"char",
+    def:"The rival or opponent of the protagonist.",
+    ex:"Voldemort." },
+  { en:"Setting", cat:"plot",
+    def:"The time/place or when/where of a story." },
+  { en:"Rising Action", cat:"plot",
+    def:"Events that occur as the protagonist attempts to resolve the conflict." },
+  { en:"Climax", cat:"plot",
+    def:"The turning point in the story, when the conflict is resolved. Often an emotional, suspenseful, or exciting moment." },
+  { en:"Falling Action", cat:"plot",
+    def:"Clarifies events immediately after the climax." },
+  { en:"Resolution", cat:"plot",
+    def:"End of the story, where things are wrapped up and loose ends are tied. Also known as dénouement." },
+  { en:"Characters", cat:"char",
+    def:"The entities (people, animals, objects) involved in the action of the story." },
+  { en:"Static Character", cat:"char",
+    def:"A character who remains the same, or changes very little, from the beginning to the end of the story." },
+  { en:"Dynamic Character", cat:"char",
+    def:"A character who changes in some important way as a result of what happens in the story.",
+    ex:"Scrooge in A Christmas Carol — miser to generous man." },
+  { en:"Characterization", cat:"char",
+    def:"The process of the writer revealing a character's traits." },
+  { en:"Direct Characterization", cat:"char",
+    def:"The author directly tells the reader something about the character's traits.",
+    ex:"“She was brave and stubborn.” — stated outright." },
+  { en:"Indirect Characterization", cat:"char",
+    def:"The author reveals indirectly what the character is like — through the character's appearance, actions, speech, thoughts, and/or what others say about the character. Readers form their own opinions.",
+    ex:"Mnemonic: STEAL — Speech, Thoughts, Effect on others, Actions, Looks." },
+  { en:"Point of View", cat:"pov",
+    def:"The vantage point from which the story is told." },
+  { en:"First-Person Point of View", cat:"pov",
+    def:"The narrator is one of the characters in the story and uses first-person pronouns (I, me, my, we, our). The narrator can only tell the story through his or her own eyes.",
+    ex:"“I never saw it coming.”" },
+  { en:"Third-Person Limited", cat:"pov",
+    def:"The narrator does not participate in the story, and observes actions, thoughts, and feelings through the eyes of only one character.",
+    ex:"The story follows only Harry's thoughts, told in the third person." },
+  { en:"Third-Person Omniscient", cat:"pov",
+    def:"The narrator is not a character in the story, but knows the actions, thoughts, and feelings of two or more characters.",
+    ex:"An all-knowing narrator who dips into everyone's head." },
+  { en:"Second-Person Point of View", cat:"pov",
+    def:"The narrator addresses the reader and uses the word “you,” so that the story is told through the reader's point of view.",
+    ex:"“You open the door slowly…”" },
+  { en:"Irony", cat:"irony",
+    def:"A contrast between expectation and reality." },
+  { en:"Situational Irony", cat:"irony",
+    def:"What occurs in the story is the opposite of what is expected to happen.",
+    ex:"A fire station burns down." },
+  { en:"Dramatic Irony", cat:"irony",
+    def:"The audience or reader knows something that the characters do not know.",
+    ex:"The audience knows the killer is behind the door; the character doesn't." },
+  { en:"Verbal Irony", cat:"irony",
+    def:"A character says the opposite of what is meant.",
+    ex:"“What lovely weather!” — said in a downpour." },
+  { en:"Figurative Language", cat:"fig",
+    def:"Language that helps the reader form mental pictures; simile, metaphor, and personification are examples of this type of language." },
+  { en:"Style", cat:"lang",
+    def:"The way a writer uses language and devices to convey meaning. Focuses more on how it is written." },
+  { en:"Foreshadowing", cat:"lang",
+    def:"The use of hints or clues to suggest events that will happen later in the story.",
+    ex:"The gun on the wall in chapter one." },
+  { en:"Imagery", cat:"fig",
+    def:"Language that creates visualization and appeals to any of the five senses.",
+    ex:"“The salty breeze stung her sunburned cheeks.”" },
+  { en:"Idiom", cat:"fig",
+    def:"Expressions that mean something different from the literal meaning (not literally true).",
+    ex:"“It's raining cats and dogs.”" },
+  { en:"Motivation", cat:"char",
+    def:"The reasons why a character acts, thinks, or feels a certain way." },
+  { en:"Symbolism", cat:"fig",
+    def:"Using something or someone to represent an idea. It stands for something beyond itself.",
+    ex:"A dove stands for peace; the green light in Gatsby stands for the dream." },
+  { en:"Onomatopoeia", cat:"fig",
+    def:"When words actually sound like the sound they describe.",
+    ex:"Buzz, crash, hiss, boom." },
+  { en:"Tone", cat:"lang",
+    def:"The writer's attitude toward their subject, character, or audience.",
+    ex:"Tone = the writer's attitude. Don't confuse with mood — what the reader feels." },
+  { en:"Mood", cat:"lang",
+    def:"Atmosphere, images, and sounds that convey a particular feeling that the reader feels when reading a text.",
+    ex:"Mood = what the reader feels. Don't confuse with tone — the writer's attitude." },
+  { en:"Simile", cat:"fig",
+    def:"A comparison of two unlike things using words such as like, as, than, or resembles.",
+    ex:"“As busy as a bee.”" },
+  { en:"Metaphor", cat:"fig",
+    def:"A comparison of two unlike things without using words such as like, as, than, or resembles.",
+    ex:"“Time is a thief.”" },
+  { en:"Hyperbole", cat:"fig",
+    def:"The exaggeration of ideas for the sake of emphasis.",
+    ex:"“I've told you a million times!”" },
+  { en:"Personification", cat:"fig",
+    def:"When a thing, place, or animal is given human characteristics.",
+    ex:"“The wind whispered through the trees.”" },
+  { en:"Dialect", cat:"lang",
+    def:"A way of speaking that is characteristic of a particular place or group of people.",
+    ex:"The Southern speech in Huckleberry Finn." },
+  { en:"Oxymoron", cat:"fig",
+    def:"Two opposite, contradictory ideas are joined to create an effect.",
+    ex:"Bittersweet; deafening silence." },
+  { en:"Allusion", cat:"fig",
+    def:"A brief and indirect reference to a person, place, thing, or idea of historical, cultural, literary, or political significance.",
+    ex:"“He's a real Romeo.”" },
+  { en:"Dialogue", cat:"char",
+    def:"The lines spoken by two or more characters in a story." },
+  { en:"Motif", cat:"lang",
+    def:"The repetition of certain elements or events within the plot.",
+    ex:"Blood — and hands that won't come clean — in Macbeth." },
+  { en:"Subplot", cat:"plot",
+    def:"Minor plots that relate to the overall story or plot in some way." },
+  { en:"Chronological Order", cat:"plot",
+    def:"The order in which events happen in time." },
+  { en:"Flashback", cat:"plot",
+    def:"An interruption of the current action to present events that took place in an earlier time." },
+  { en:"Connotation", cat:"lang",
+    def:"A meaning, association, or emotion suggested by a word, in addition to its formal or dictionary meaning.",
+    ex:"Home feels warmer than house." },
+  { en:"Denotation", cat:"lang",
+    def:"The literal or formal dictionary meaning.",
+    ex:"Snake — denotation: the reptile; connotation: treachery." },
+  { en:"Analogy", cat:"fig",
+    def:"A comparison made between two things to show how they are alike.",
+    ex:"The heart is to the body as a pump is to plumbing." },
+  { en:"Diction", cat:"lang",
+    def:"A writer's or speaker's choice and use of words and phrases in speeches or writings.",
+    ex:"Choosing slender vs. skinny changes the effect." },
+  { en:"Satire", cat:"lang",
+    def:"A type of writing that ridicules the flaws of people or institutions in an attempt to bring about a change.",
+    ex:"Animal Farm mocks totalitarian rule." },
+  { en:"Allegory", cat:"lang",
+    def:"A story, poem, or picture that can be interpreted to reveal a hidden meaning, typically a moral or political one.",
+    ex:"Animal Farm read as the story of the Soviet Union — both satire and allegory." },
+];
+
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+
+let dir = "term";              // term = Term→Def, def = Def→Term
+let filter = "all";            // all | cat key | starred
+let marked = new Set(store.get("lit-flash-marked", []));
+let list = [];                 // current card indices
+let pos = 0;
+let flipped = false;
+let shuffled = false;
+
+function buildList() {
+  let idx = CARDS.map((_, i) => i);
+  if (filter === "starred") idx = idx.filter(i => marked.has(i));
+  else if (filter !== "all") idx = idx.filter(i => CARDS[i].cat === filter);
+  if (shuffled) {
+    for (let i = idx.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [idx[i], idx[j]] = [idx[j], idx[i]];
+    }
+  }
+  list = idx;
+  pos = 0;
+  flipped = false;
+}
+
+function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+function termFaceHTML(c, i) {
+  return `
+    <div class="face-top">
+      <span class="cat-tag">${CATS[c.cat]}</span>
+      <span class="star-flag ${marked.has(i) ? "on" : ""}">${marked.has(i) ? "★ tricky" : ""}</span>
+    </div>
+    <div class="face-mid term-face">
+      <div class="term"><em>${esc(c.en)}</em></div>
+    </div>`;
+}
+
+function defFaceHTML(c, i, withTerm) {
+  return `
+    <div class="face-top">
+      <span class="cat-tag">${CATS[c.cat]}</span>
+      <span class="star-flag ${marked.has(i) ? "on" : ""}">${marked.has(i) ? "★ tricky" : ""}</span>
+    </div>
+    <div class="face-mid def-face">
+      ${withTerm ? `<div class="mini-term">${esc(c.en)}</div>` : ""}
+      <p class="def-en">${esc(c.def)}</p>
+      ${c.ex ? `<p class="ex"><b>e.g.</b>${esc(c.ex)}</p>` : ""}
+    </div>`;
+}
+
+function emptyHTML() {
+  return `<div class="face-mid term-face">
+    <p class="def-en" style="text-align:center; color:var(--muted)">No cards in this stack yet.<br>Mark cards with ☆, or pick another category.</p>
+  </div>`;
+}
+
+function render(instant) {
+  const card = $("card");
+  if (instant) card.classList.add("no-anim");
+  card.classList.toggle("flipped", flipped);
+
+  if (list.length === 0) {
+    $("faceFront").innerHTML = emptyHTML();
+    $("faceBack").innerHTML = emptyHTML();
+    $("count").innerHTML = "0 cards";
+    $("bar").style.width = "0";
+  } else {
+    const i = list[pos], c = CARDS[i];
+    if (dir === "term") {
+      $("faceFront").innerHTML = termFaceHTML(c, i);
+      $("faceBack").innerHTML = defFaceHTML(c, i, true);
+    } else {
+      $("faceFront").innerHTML = defFaceHTML(c, i, false);
+      $("faceBack").innerHTML = termFaceHTML(c, i);
+    }
+    $("count").innerHTML = `<b>${pos + 1}</b> / ${list.length}`;
+    $("bar").style.width = ((pos + 1) / list.length * 100) + "%";
+    const on = marked.has(i);
+    $("btnStar").textContent = on ? "★ Tricky" : "☆ Mark as tricky";
+    $("btnStar").classList.toggle("starred", on);
+  }
+  if (instant) requestAnimationFrame(() => requestAnimationFrame(() => card.classList.remove("no-anim")));
+  renderChips();
+}
+
+function renderChips() {
+  const counts = {};
+  CARDS.forEach(c => counts[c.cat] = (counts[c.cat] || 0) + 1);
+  let html = `<button class="chip ${filter === "all" ? "on" : ""}" data-f="all">All <small>${CARDS.length}</small></button>`;
+  for (const k in CATS) {
+    html += `<button class="chip ${filter === k ? "on" : ""}" data-f="${k}">${CATS[k]} <small>${counts[k]}</small></button>`;
+  }
+  html += `<button class="chip ${filter === "starred" ? "on" : ""}" data-f="starred">★ Tricky <small>${marked.size}</small></button>`;
+  $("chips").innerHTML = html;
+  $("chips").querySelectorAll(".chip").forEach(b => {
+    b.onclick = () => { filter = b.dataset.f; buildList(); render(true); };
+  });
+}
+
+function renderSheet() {
+  let html = "";
+  for (const k in CATS) {
+    html += `<div class="sheet-group"><h3>${CATS[k]}</h3>`;
+    CARDS.forEach(c => {
+      if (c.cat !== k) return;
+      html += `<div class="sheet-row">
+        <div class="t">${esc(c.en)}</div>
+        <div class="d">${esc(c.def)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  $("sheet").innerHTML = html;
+}
+
+function flip() { if (list.length) { flipped = !flipped; $("card").classList.toggle("flipped", flipped); } }
+function move(step) {
+  if (!list.length) return;
+  pos = (pos + step + list.length) % list.length;
+  flipped = false;
+  render(true);
+}
+function toggleStar() {
+  if (!list.length) return;
+  const i = list[pos];
+  if (marked.has(i)) marked.delete(i); else marked.add(i);
+  store.set("lit-flash-marked", [...marked]);
+  if (filter === "starred") { const keep = pos; buildList(); pos = Math.min(keep, Math.max(0, list.length - 1)); }
+  render(true);
+}
+
+$("card").onclick = flip;
+$("btnFlip").onclick = flip;
+$("btnPrev").onclick = () => move(-1);
+$("btnNext").onclick = () => move(1);
+$("btnStar").onclick = toggleStar;
+$("btnShuffle").onclick = () => { shuffled = true; buildList(); render(true); };
+$("dirTerm").onclick = () => { dir = "term"; $("dirTerm").classList.add("on"); $("dirDef").classList.remove("on"); flipped = false; render(true); };
+$("dirDef").onclick = () => { dir = "def"; $("dirDef").classList.add("on"); $("dirTerm").classList.remove("on"); flipped = false; render(true); };
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key === "ArrowRight") { e.preventDefault(); move(1); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); move(-1); }
+  else if (e.key === " ") { e.preventDefault(); flip(); }
+  else if (e.key === "m" || e.key === "M") { toggleStar(); }
+});
+
+buildList();
+render(true);
+renderSheet();
+</script>
+</body>
+</html>
